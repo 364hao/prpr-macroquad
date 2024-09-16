@@ -1,7 +1,5 @@
 //! Cross platform file management functions.
 
-use std::path::Path;
-
 use crate::exec;
 
 #[derive(Debug)]
@@ -52,7 +50,7 @@ pub async fn load_file(path: &str) -> Result<Vec<u8>, FileError> {
 
     #[cfg(not(target_os = "android"))]
     let path = if let Some(ref pc_assets) = crate::get_context().pc_assets_folder {
-        Path::new(pc_assets).join(path).display().to_string()
+        format!("{}/{}", pc_assets, path)
     } else {
         path.to_string()
     };

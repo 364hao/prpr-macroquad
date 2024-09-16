@@ -237,7 +237,6 @@ enum MiniquadInputEvent {
         id: u64,
         x: f32,
         y: f32,
-        time: f64,
     },
 }
 
@@ -260,7 +259,7 @@ impl MiniquadInputEvent {
                 repeat,
             } => t.key_down_event(ctx, *keycode, *modifiers, *repeat),
             KeyUp { keycode, modifiers } => t.key_up_event(ctx, *keycode, *modifiers),
-            Touch { phase, id, x, y, time } => t.touch_event(ctx, *phase, *id, *x, *y, *time),
+            Touch { phase, id, x, y } => t.touch_event(ctx, *phase, *id, *x, *y),
         }
     }
 }
@@ -537,7 +536,6 @@ impl EventHandler for Stage {
         id: u64,
         x: f32,
         y: f32,
-        time: f64,
     ) {
         let context = get_context();
 
@@ -547,7 +545,6 @@ impl EventHandler for Stage {
                 id,
                 phase: phase.into(),
                 position: Vec2::new(x, y),
-                time,
             },
         );
 
@@ -568,7 +565,7 @@ impl EventHandler for Stage {
         context
             .input_events
             .iter_mut()
-            .for_each(|arr| arr.push(MiniquadInputEvent::Touch { phase, id, x, y, time }));
+            .for_each(|arr| arr.push(MiniquadInputEvent::Touch { phase, id, x, y }));
     }
 
     fn char_event(

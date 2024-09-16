@@ -388,6 +388,7 @@ impl PipelinesStorage {
             ..Default::default()
         };
 
+        const PIPELINE_NONE: Option<PipelineExt> = None;
         let mut storage = PipelinesStorage {
             pipelines: Vec::new(),
             first_hole: 0,
@@ -473,11 +474,7 @@ impl PipelinesStorage {
             params,
         );
 
-        while self
-            .pipelines
-            .get(self.first_hole)
-            .map_or(false, |it| it.is_some())
-        {
+        while self.pipelines.get(self.first_hole).map_or(false, |it| it.is_some()) {
             self.first_hole += 1;
         }
         if self.first_hole == self.pipelines.len() {
@@ -801,8 +798,13 @@ impl QuadGl {
         self.state.viewport = viewport;
     }
 
-    pub fn get_viewport(&self) -> Option<(i32, i32, i32, i32)> {
-        self.state.viewport
+    pub fn get_viewport(&self) -> (i32, i32, i32, i32) {
+        self.state.viewport.unwrap_or((
+            0,
+            0,
+            crate::window::screen_width() as _,
+            crate::window::screen_height() as _,
+        ))
     }
 
     pub fn push_model_matrix(&mut self, matrix: glam::Mat4) {
